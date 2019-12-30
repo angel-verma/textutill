@@ -34,36 +34,44 @@ def analyze(request):
             if char not in punctuations:
                 analyzed += char
 
-        params = {'purpose': 'Removed punctuations!', 'analyzed_text': analyzed}
+        params = {'purpose': 'Removed punctuations!',
+                  'analyzed_text': analyzed}
+        djtext = analyzed
         # Analyse the text
         # return HttpResponse('''Remove Punctuations <a href='/'>Back</a>''')
-        return render(request, 'analyze.html', params)
+        # return render(request, 'analyze.html', params)
 
-    elif(fullcaps == "on"):
+    if(fullcaps == "on"):
         analyzed = ""
         for char in djtext:
             analyzed += char.upper()
-        params = {'purpose': 'Changed To Uppercase!', 'analyzed_text': analyzed}
-        return render(request, 'analyze.html', params)
+        params = {'purpose': 'Changed To Uppercase!',
+                  'analyzed_text': analyzed}
+        djtext = analyzed
+        # return render(request, 'analyze.html', params)
 
-    elif(newlineremove == "on"):
+    if(newlineremove == "on"):
         analyzed = ""
         for char in djtext:
             if char != "\n" and char != "\r":
                 analyzed += char
         params = {'purpose': 'Removed New Lines!', 'analyzed_text': analyzed}
-        return render(request, 'analyze.html', params)
+        djtext = analyzed
+        # return render(request, 'analyze.html', params)
 
-    elif(extraspaceremover == "on"):
+    if(extraspaceremover == "on"):
         analyzed = ""
         for index, char in enumerate(djtext):
             if not(djtext[index] == " " and djtext[index+1] == " "):
                 analyzed += char
         params = {'purpose': 'Removed Extra Space!', 'analyzed_text': analyzed}
-        return render(request, 'analyze.html', params)
+        djtext = analyzed
+        # return render(request, 'analyze.html', params)
 
-    else:
-        return HttpResponse("Error")
+    if(removepunc != "on" and newlineremove != "on" and fullcaps != "on" and extraspaceremover != "on"):
+        return render(request, 'error.html')
+
+    return render(request, 'analyze.html', params)
 
 
 def removepunc(request):
